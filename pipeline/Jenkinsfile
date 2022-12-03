@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+ stages {
+    stage('Clone Git + build') {
+                steps {
+                    // Get some code from a GitHub repository
+                    git 'https://github.com/vfalco2021/qaacademy_cucumber_turma6_val.git'
+
+                    bat "mvn -Dmaven.test.failure.ignore=true clean install"
+
+                }
+         }
+        stage('Testando') {
+            steps {
+                bat "mvn -Dtest=Runner test"
+            }
+
+            post {
+                // If Maven was able to run the tests, even if some of the test
+                // failed, record the test results and archive the jar file.
+                success {
+                    allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                    archiveArtifacts 'target/*.jar'
+                }
+            }
+        }
+    }
+}
