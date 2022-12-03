@@ -4,7 +4,8 @@ pipeline {
     stage('Clone Git + build') {
                 steps {
                     // Get some code from a GitHub repository
-                    git 'https://github.com/vfalco2021/qaacademy_cucumber_turma6_val.git'
+                    git branch: 'main', url:
+                    'https://github.com/vfalco2021/qaacademy_cucumber_turma6_val.git'
 
                     bat "mvn -Dmaven.test.failure.ignore=true clean install"
 
